@@ -1,6 +1,12 @@
 import type { PaletteColor } from "@/types/tools"
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover"
+import { HexColorPicker } from "react-colorful"
 
 interface PaletteEditorProps {
   colors: PaletteColor[]
@@ -47,23 +53,26 @@ export function PaletteEditor({
       )}
       {colors.map((entry, i) => (
         <div key={i} className="flex items-center gap-2">
-          <input
-            type="color"
-            value={entry.color}
-            onChange={(e) => updateColor(i, { color: e.target.value })}
-            className="h-7 w-7 shrink-0 cursor-pointer appearance-none rounded-md border border-border-control bg-transparent p-0 [&::-webkit-color-swatch-wrapper]:p-0.5 [&::-webkit-color-swatch]:rounded [&::-webkit-color-swatch]:border-none"
-          />
-          <input
-            type="text"
-            value={entry.color}
-            onChange={(e) => {
-              const val = e.target.value
-              if (/^#[0-9a-fA-F]{6}$/.test(val)) {
-                updateColor(i, { color: val })
-              }
-            }}
-            className="w-[58px] shrink-0 rounded-md border border-border-control bg-transparent px-1.5 py-1 font-mono text-2xs text-text-secondary outline-none"
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                className="h-7 w-7 shrink-0 cursor-pointer rounded-md border border-border-control"
+                style={{ backgroundColor: entry.color }}
+              />
+            </PopoverTrigger>
+            <PopoverContent className="flex w-auto flex-col gap-2">
+              <HexColorPicker color={entry.color} onChange={(color) => updateColor(i, { color })} />
+              <input
+                type="text"
+                value={entry.color}
+                onChange={(e) => {
+                  const v = e.target.value
+                  if (/^#[0-9a-fA-F]{0,6}$/.test(v)) updateColor(i, { color: v })
+                }}
+                className="h-7 w-full rounded-md border border-border-control bg-control-bg px-2 font-mono text-xs text-text-primary focus:outline-none"
+              />
+            </PopoverContent>
+          </Popover>
           <div className="flex-1">
             <Slider
               value={[entry.weight]}

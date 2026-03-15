@@ -497,7 +497,7 @@ export const tools: ToolDefinition[] = [
 
 ## Implementation Phases
 
-**Current phase: 7**
+**Current phase: 8**
 
 - [x] **Phase 1: Scaffold + App Shell** — Vite + React 19 + TS strict + Tailwind v4 + shadcn. Three-column layout (ToolSwitcher / CanvasArea / Sidebar). 9 lazy-loaded routes with localStorage redirect. Dithered squircle icons per tool with color palettes. Dark theme. Done.
 - [x] **Phase 2: Shared Controls** — 6 shadcn/ui primitives (button, slider, select, popover, collapsible, switch) + 8 control components (section, slider-control, select-control, color-control, switch-control, button-row, gradient-editor, palette-editor). PaletteColor type added. Topo wired with demo controls for visual verification. Done.
@@ -506,7 +506,7 @@ export const tools: ToolDefinition[] = [
 - [x] **Phase 5: Port Blocks** — Adds palette system with 5 color pickers, canvas size switching. Key discoveries: `pixelDensity(1)` essential for tools with per-pixel effects (texture/grain/halftone) — blocks are flat geometric shapes that don't benefit from retina; pre-computed noise lookup table at half resolution avoids expensive per-pixel `p.noise()` calls; `seededRandom` from `lib/math.ts` (not `p.randomSeed`/`p.random`) for deterministic layout and color assignment; geometry cached separately from color assignment for slider responsiveness. Done.
 - [x] **Phase 6: Port Organic** — First use of GradientEditor, dynamic algorithm-specific controls. 3 path types (flowField/wandering/waves) with per-algorithm settings sections. 10 palette presets + custom gradient via ColorStop editor. Organic effects (wobble/roughness/taper), texture and grain post-processing. Path generation cached separately from rendering for slider responsiveness. Done.
 - [x] **Phase 7: Port Dither** — Canvas 2D (no p5/Three.js). Bayer matrices, pattern thresholds, gradient generation, and dithering core consolidated into `engine.ts`. Compact inline PaletteEditor (swatch + hex + weight slider + %). SVG export via `svg.ts`. Image upload + drag-and-drop. 4 palette presets. Default: Game Boy palette, square shape, 45° linear gradient. Done.
-- [ ] **Phase 8: Port Gradients** — Animation toggle (noLoop ↔ loop). MP4 video recording.
+- [x] **Phase 8: Port Gradients** — First WEBGL shader tool. Fragment shader ported verbatim (simplex noise, FBM, domain warping, glass waves, gradient interpolation, lighting/fresnel, grain, adjustments). Offscreen `createGraphics(WEBGL)` rendered to 2D main canvas. Animation toggle via internal `wasAnimating` flag (`p.loop()`/`p.noLoop()` switching) without `useP5` animated mode. MP4 recording via `createRecorder` with forced animation. 18 preset palettes + HSL random generation. Cached color stop parsing and container size to avoid per-frame allocations/DOM reads during animation. GradientEditor and PaletteEditor both use react-colorful HexColorPicker popover for consistent color picking across tools. Done.
 - [ ] **Phase 9: Port Plotter** — Large conditional controls based on patternType and brushType.
 - [ ] **Phase 10: Port Metal Shader** — Three.js integration. useThree hook. Only 2 settings.
 - [ ] **Phase 11: Port ASCII** — 4605 lines inline JS extraction. 60+ settings. Image upload.
