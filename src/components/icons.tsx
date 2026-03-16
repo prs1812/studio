@@ -58,7 +58,6 @@ const palettes = {
   dither:      ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"],
   gradients:   ["#2d1a40", "#5a2d7a", "#8b5ab5", "#bc8fe0"],
   plotter:     ["#1a1a33", "#2d2d66", "#5a5a99", "#8b8bcc"],
-  metalshader: ["#1a1a1a", "#444444", "#777777", "#aaaaaa"],
   ascii:       ["#1a2e1a", "#2d5a1a", "#5a8c2d", "#8bbd5a"],
   lines:       ["#1a3340", "#2d5c6b", "#5a8f9e", "#8fc2d1"],
 } as const

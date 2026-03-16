@@ -2,7 +2,7 @@
 
 ## Context
 
-Nine standalone design/generative art tools spread across `~/Development/art` (8 tools) and `~/Development/dither` (web app only — ignoring the Illustrator plugin) share identical aesthetics and duplicated UI code but live in separate codebases. The goal is to combine them into a single polished web app where you can switch between tools fluidly, with shared UI components, theming, and utilities. New repo at `~/Development/studio`, deployed to its own domain.
+Eight standalone design/generative art tools spread across `~/Development/art` (7 tools) and `~/Development/dither` (web app only — ignoring the Illustrator plugin) share identical aesthetics and duplicated UI code but live in separate codebases. The goal is to combine them into a single polished web app where you can switch between tools fluidly, with shared UI components, theming, and utilities. New repo at `~/Development/studio`, deployed to its own domain.
 
 ## Stack
 
@@ -10,7 +10,6 @@ Nine standalone design/generative art tools spread across `~/Development/art` (8
 - **Tailwind CSS v4 + shadcn/ui** for controls and layout
 - **react-router-dom v7** for path-based routing (`/blocks`, `/topo`, etc.)
 - **p5.js** (instance mode) for 7 canvas tools
-- **Three.js** for metalshader
 - **mp4-muxer** for video export (gradients, lines)
 - **react-colorful** for color pickers
 - **vitest** for utility tests
@@ -166,10 +165,6 @@ studio/
 │       │   ├── index.tsx
 │       │   ├── sketch.ts
 │       │   └── types.ts
-│       ├── metalshader/
-│       │   ├── index.tsx
-│       │   ├── renderer.ts
-│       │   └── types.ts
 │       ├── ascii/
 │       │   ├── index.tsx
 │       │   ├── sketch.ts
@@ -286,12 +281,6 @@ function useP5(containerRef, sketchFn, settings, options?: { animated?: boolean 
 ```
 Instance mode lifecycle. settingsRef stays in sync. Calls redraw() unless animated. Cleans up on unmount.
 
-### `use-three.ts`
-```ts
-function useThree(containerRef, setupFn, settings): void
-```
-Creates renderer/scene/camera. Resize observer. Cleanup on unmount. Only used by metalshader.
-
 ---
 
 ## Tool Registry
@@ -304,7 +293,6 @@ export const tools: ToolDefinition[] = [
   { id: 'dither', name: 'Dither', icon: '▒', component: lazy(() => import('./dither')) },
   { id: 'gradients', name: 'Gradients', icon: '◐', component: lazy(() => import('./gradients')) },
   { id: 'plotter', name: 'Plotter', icon: '✒', component: lazy(() => import('./plotter')) },
-  { id: 'metalshader', name: 'Metal Shader', icon: '⬡', component: lazy(() => import('./metalshader')) },
   { id: 'ascii', name: 'ASCII', icon: 'A>', component: lazy(() => import('./ascii')) },
   { id: 'lines', name: 'Lines', icon: '≋', component: lazy(() => import('./lines')) },
 ]
@@ -442,19 +430,7 @@ export const tools: ToolDefinition[] = [
 
 ---
 
-### Tool 7: Metal Shader (3D Particle Visualization)
-
-**Source:** `~/Development/art/metalshader/index.html` (370 lines)
-**Renderer:** Three.js, continuous requestAnimationFrame
-**Canvas:** Fullscreen responsive
-
-**Settings:** peak (0.5-5.0), spread (0.5-5.0). That's it.
-
-**Special:** OrbitControls. 200K particles, gaussian distribution. Color: gold→green→cyan→blue by height. Simplest tool — validates Three.js path.
-
----
-
-### Tool 8: ASCII (ASCII Art Generator)
+### Tool 7: ASCII (ASCII Art Generator)
 
 **Source:** `~/Development/art/ascii/index.html` (4605 lines inline)
 **Renderer:** p5.js, `noLoop()` + `redraw()`
@@ -510,10 +486,9 @@ export const tools: ToolDefinition[] = [
 - [x] **Phase 7: Port Dither** — Canvas 2D (no p5/Three.js). Bayer matrices, pattern thresholds, gradient generation, and dithering core consolidated into `engine.ts`. Compact inline PaletteEditor (swatch + hex + weight slider + %). SVG export via `svg.ts`. Image upload + drag-and-drop. 4 palette presets. Default: Game Boy palette, square shape, 45° linear gradient. Done.
 - [x] **Phase 8: Port Gradients** — First WEBGL shader tool. Fragment shader ported verbatim (simplex noise, FBM, domain warping, glass waves, gradient interpolation, lighting/fresnel, grain, adjustments). Offscreen `createGraphics(WEBGL)` rendered to 2D main canvas. Animation toggle via internal `wasAnimating` flag (`p.loop()`/`p.noLoop()` switching) without `useP5` animated mode. MP4 recording via `createRecorder` with forced animation. 18 preset palettes + HSL random generation. Cached color stop parsing and container size to avoid per-frame allocations/DOM reads during animation. GradientEditor and PaletteEditor both use react-colorful HexColorPicker popover for consistent color picking across tools. Done.
 - [x] **Phase 9: Port Plotter** — 6 pattern types (dotGrid/flowField/concentric/waves/hatching/geometric) with conditional controls per pattern. 5 brush types (normal/stippled/multiStroke/calligraphic/stamp) with conditional sub-settings. Organic distortion (wobble/roughness/taper). Layer system simplified to flat `colors[]` array with 12 palette presets. Shape controls for dotGrid/geometric, brush controls for path-based patterns. Custom paper texture (fibers + scratches + grain) via canvas 2D API. Noise sliders need `decimals` prop for fractional display. Done.
-- [ ] **Phase 10: Port Metal Shader** — Three.js integration. useThree hook. Only 2 settings.
-- [ ] **Phase 11: Port ASCII** — 4605 lines inline JS extraction. 60+ settings. Image upload.
-- [ ] **Phase 12: Port Lines** — Largest tool. Two gradient editors. Animation + video. 65+ settings. WEBGL buffer cleanup.
-- [ ] **Phase 13: Polish** — SVG icons, keyboard shortcuts, responsive canvas, mobile layout, page titles, favicon, deploy.
+- [ ] **Phase 10: Port ASCII** — 4605 lines inline JS extraction. 60+ settings. Image upload.
+- [ ] **Phase 11: Port Lines** — Largest tool. Two gradient editors. Animation + video. 65+ settings. WEBGL buffer cleanup.
+- [ ] **Phase 12: Polish** — SVG icons, keyboard shortcuts, responsive canvas, mobile layout, page titles, favicon, deploy.
 
 ---
 
@@ -565,7 +540,6 @@ For each tool, prefix with `p.`:
 | Dither | `dither/packages/core/` + `web/app.js` | 829 | Canvas 2D |
 | Gradients | `art/gradients/sketch.js` | 1158 | p5 |
 | Plotter | `art/plotter/sketch.js` | 2241 | p5 |
-| Metal Shader | `art/metalshader/index.html` | 370 | Three.js |
 | ASCII | `art/ascii/index.html` | 4605 | p5 |
 | Lines | `art/lines/sketch.js` | 4750 | p5 |
-| **Total** | | **~17,000** | |
+| **Total** | | **~16,600** | |

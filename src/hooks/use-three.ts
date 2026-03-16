@@ -1,7 +1,7 @@
 import { useEffect, useRef, type RefObject } from "react";
 import * as THREE from "three";
 
-interface ThreeContext<T> {
+export interface ThreeContext<T> {
   renderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
@@ -24,6 +24,7 @@ export function useThree<T>(
   containerRef: RefObject<HTMLDivElement | null>,
   setupFn: (ctx: ThreeContext<T>) => ThreeCallbacks | void,
   settings: T,
+  rendererOptions?: Partial<THREE.WebGLRendererParameters>,
 ): void {
   const settingsRef = useRef<T>(settings);
   settingsRef.current = settings;
@@ -37,6 +38,7 @@ export function useThree<T>(
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
+      ...rendererOptions,
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(width, height);

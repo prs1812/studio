@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Unified Design Studio — a single web app consolidating 9 standalone generative art/design tools into one cohesive experience. Tools share UI components, theming, and utilities but each has its own canvas renderer and settings.
+Unified Design Studio — a single web app consolidating 8 standalone generative art/design tools into one cohesive experience. Tools share UI components, theming, and utilities but each has its own canvas renderer and settings.
 
 Detailed specs live in `docs/PLAN.md`. Treat it as the source of truth for architecture decisions, tool specs, and implementation phases.
 
@@ -13,7 +13,7 @@ Detailed specs live in `docs/PLAN.md`. Treat it as the source of truth for archi
 - **Vite + React 19 + TypeScript** (strict mode)
 - **Tailwind CSS v4 + shadcn/ui** for UI controls
 - **react-router-dom v7** for path-based routing (`/blocks`, `/topo`, etc.)
-- **p5.js** (instance mode) for 7 tools, **Three.js** for metalshader, **Canvas 2D** for dither
+- **p5.js** (instance mode) for 7 tools, **Canvas 2D** for dither
 - **mp4-muxer** for video export, **react-colorful** for color pickers
 - **vitest** for utility tests
 
@@ -33,7 +33,7 @@ npx vitest run src/lib/color.test.ts  # Single test file
 
 ### Layout: Three-column shell
 - **ToolSwitcher** (48px left rail) — vertical icon nav, stores last-used tool in localStorage
-- **Canvas Area** (flex: 1 center) — mounts p5/Three.js/Canvas2D per tool
+- **Canvas Area** (flex: 1 center) — mounts p5/Canvas2D per tool
 - **Sidebar** (280px right) — scrollable controls with pinned footer for action buttons, varies per tool
 
 ### Routing & Loading
@@ -44,13 +44,12 @@ npx vitest run src/lib/color.test.ts  # Single test file
 ### Tool Structure
 Each tool lives in `src/tools/<name>/` with:
 - `index.tsx` — React component (sidebar controls + canvas mount)
-- `sketch.ts` (or `engine.ts`, `renderer.ts`) — rendering logic
+- `sketch.ts` (or `engine.ts`) — rendering logic
 - `types.ts` — settings type (must use `type`, not `interface` — interfaces don't satisfy `useSettings`'s `Record<string, unknown>` constraint)
 
 ### Core Hooks
 - **`useSettings(key, defaults)`** — localStorage persistence with 200ms debounced writes, merges with defaults on load
 - **`useP5(containerRef, sketchFn, settings, options)`** — p5.js instance lifecycle, settingsRef stays in sync, calls `redraw()` unless `animated: true`
-- **`useThree(containerRef, setupFn, settings)`** — Three.js renderer/scene/camera setup with resize observer (metalshader only)
 
 ### Shared Utilities (`src/lib/`)
 - `color.ts` — hex/rgb conversion, lerp, gradient sampling
@@ -97,4 +96,4 @@ All p5 tools use instance mode. Every p5 global must be prefixed with `p.` (e.g.
 
 ## Source Tools
 
-Original implementations live in `~/Development/art/` (8 tools) and `~/Development/dither/` (1 tool). Reference these when porting. The 9 tools are: topo, blocks, organic, dither, gradients, plotter, metalshader, ascii, lines.
+Original implementations live in `~/Development/art/` (7 tools) and `~/Development/dither/` (1 tool). Reference these when porting. The 8 tools are: topo, blocks, organic, dither, gradients, plotter, ascii, lines.

@@ -38,13 +38,7 @@ export const tools: ToolDefinition[] = [
     icon: "plotter",
     component: lazy(() => import("@/tools/plotter")),
   },
-  {
-    id: "metalshader",
-    name: "Metal",
-    icon: "metalshader",
-    component: lazy(() => import("@/tools/metalshader")),
-  },
-  {
+{
     id: "ascii",
     name: "ASCII",
     icon: "ascii",

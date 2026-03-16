@@ -1,8 +1,8 @@
 # Studio
 
-A unified design studio combining 9 generative art tools into a single web app.
+A unified design studio combining 8 generative art tools into a single web app.
 
-**Tools:** Topo, Blocks, Organic, Dither, Gradients, Plotter, Metal Shader, ASCII, Lines
+**Tools:** Topo, Blocks, Organic, Dither, Gradients, Plotter, ASCII, Lines
 
 ## Setup
 
@@ -18,7 +18,6 @@ Open [http://localhost:5173](http://localhost:5173).
 - Vite + React 19 + TypeScript (strict mode)
 - Tailwind CSS v4 + shadcn/ui
 - p5.js (instance mode) for canvas tools
-- Three.js for Metal Shader
 - mp4-muxer for video export
 
 ## Project Structure
@@ -26,7 +25,7 @@ Open [http://localhost:5173](http://localhost:5173).
 ```
 src/
 ├── components/       # Shared UI (shell, sidebar, controls)
-├── hooks/            # useSettings, useP5, useThree, useFavicon
+├── hooks/            # useSettings, useP5, useFavicon
 ├── lib/              # Utilities (color, math, texture, export)
 └── tools/            # One directory per tool
     └── <name>/
